@@ -7,6 +7,7 @@
 - When you register a new account to play You will get banned after playing 1-3 games because you get Shadow Bans or HWID ban
 - All these steps will help you get back to playing it, please read all steps before asking.
 - Read step all 
+- All archives and text are from the original UC, so it's not mine.
 
  Sort the steps of use Ifthere is no number written in front
 ---
