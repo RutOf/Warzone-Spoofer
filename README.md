@@ -1,6 +1,6 @@
 ## Spoofer Call of Duty Warfare | Warzone 
 
----
+--- 
 
 ### ❗・Important
 
