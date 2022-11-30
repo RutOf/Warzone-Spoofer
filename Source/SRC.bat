@@ -157,9 +157,6 @@ del "C:\Users\%username%\AppData\Local\Battle.net\Logs"
 del "C:\Users\%username%\AppData\Local\Battle.net\WidevineCdm"
 del "C:\Users\%username%\AppData\Local\Battle.net\CachedData"
 del "C:\Users\%username%\AppData\Local\Blizzard Entertainment"
-del "C:\Users\%username%\AppData\Roaming\Battle.net"
-del "C:\ProgramData\Battle.net"
-del "C:\ProgramData\Blizzard Entertainment"
 rundll32 user32.dll,MessageBeep
 cls
 echo Finished!
