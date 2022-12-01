@@ -1,7 +1,7 @@
 ## Spoofer Call of Duty Warfare | Warzone 
 
 --- 
-
+ 
 ### ❗・Important
 
 - When you register a new account to play You will get banned after playing 1-3 games because you get Shadow Bans or HWID ban
