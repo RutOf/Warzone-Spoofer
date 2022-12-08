@@ -251,13 +251,3 @@ timeout 4
 
 ---
 
-// string WEB::replaceAll(string subject, const string& search,
-//	const string& replace) {
-// ize_t pos = 0;
-//	while ((pos = subject.find(search, pos)) != string::npos) {
-//		subject.replace(pos, search.length(), replace);
-//		pos += replace.length();
-//	 }
-//	return subject;
-// }
-
