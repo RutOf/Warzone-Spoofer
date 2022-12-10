@@ -23,7 +23,7 @@
 
 - Open HWID Checker.bat
 - Copy and paste results into notepad and save the file
-
+ 
 ---
 ### 2. Then clean trace files:
 
