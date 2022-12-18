@@ -1,52 +1,31 @@
 @echo off
-title HWID Checker by Tuga
 
-@echo SMBIOS
-@echo off 
+rem Display SMBIOS and BIOS serial number
+echo SMBIOS:
 wmic csproduct get uuid
-
-@echo BIOS
-@echo off 
+echo BIOS:
 wmic bios get serialnumber
 
- 
-rem DOCS
-rem advfirewall - technet.microsoft.com/en-us/library/cc771046(v=ws.10).aspx
-rem arp - technet.microsoft.com/en-us/library/cc940107.aspx
-rem ipconfig - technet.microsoft.com/en-us/library/bb490921.aspx
-rem nbtstat - technet.microsoft.com/en-us/library/bb490938.aspx
-rem netsh - technet.microsoft.com/en-us/library/cc770948(v=ws.10).aspx
-rem route - technet.microsoft.com/en-us/library/bb490991.aspx
+rem Reset network adapters and settings
+ipconfig /release
+ipconfig /renew
+ipconfig /flushdns
+netsh int ip reset
+netsh winsock reset
 
-rem Set all needed services back to start/auto
-reg add "HKLM\System\CurrentControlSet\Services\BFE" /v "Start" /t REG_DWORD /d "2" /f
-reg add "HKLM\System\CurrentControlSet\Services\Dnscache" /v "Start" /t REG_DWORD /d "2" /f
-reg add "HKLM\System\CurrentControlSet\Services\MpsSvc" /v "Start" /t REG_DWORD /d "2" /f
-reg add "HKLM\System\CurrentControlSet\Services\WinHttpAutoProxySvc" /v "Start" /t REG_DWORD /d "3" /f
-
-rem Default services
-sc config Dhcp start= auto
-sc config DPS start= auto
-sc config lmhosts start= auto
-sc config NlaSvc start= auto
-sc config nsi start= auto
-sc config RmSvc start= auto
-sc config Wcmsvc start= auto
-sc config WdiServiceHost start= demand
-sc config Winmgmt start= auto
-
-sc config NcbService start= demand
-sc config Netman start= demand
-sc config netprofm start= demand
-sc config WlanSvc start= auto
-sc config WwanSvc start= demand
-
+rem Enable and start essential services
+sc config Dhcp start=auto
+sc config NlaSvc start=auto
+sc config nsi start=auto
+sc config RmSvc start=auto
+sc config Wcmsvc start=auto
+sc config Winmgmt start=auto
 net start Dhcp
-net start DPS
 net start NlaSvc
 net start nsi
 net start RmSvc
 net start Wcmsvc
+
 
 rem Disable netadapter with index number 0-5 (ipconfig /release)
 wmic path win32_networkadapter where index=0 call disable
