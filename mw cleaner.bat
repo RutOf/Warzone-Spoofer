@@ -42,89 +42,49 @@ taskkill /IM Battle.net.exe /F
 del "%temp%\getadmin.vbs"
 exit /B
 
-:gotAdmin
+@echo off
+
+rem Change to the current directory
 pushd "%CD%"
 CD /D "%~dp0"
-:--------------------------------------
+
 cls
 echo Cleaning...
-timout 2
+timeout 2
 cls
-taskkill /IM Agent.exe /F
-taskkill /IM Battle.net.exe /F
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data0.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data1.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc0.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc1.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\Data\data\shmem"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\recipes\cmr_hist"
-del /f ".\Data\data\shmem"
-del /f ".\main\recipes\cmr_hist"
-rmdir ".\main\recipes\cmr_hist" /s /q
-rmdir "%userprofile%\documents\Call of Duty Modern Warfare" /s /q
-rmdir "%userprofile%\documents\Call of Duty Modern Warfare" /s /q
-rmdir "%localappdata%\Battle.net" /s /q
-rmdir "%localappdata%\Blizzard Entertainment" /s /q
-rmdir "%appdata%\Battle.net" /s /q
-rmdir "%programdata%\Battle.net" /s /q
-rmdir "%programdata%\Blizzard Entertainment" /s /q
-rmdir "%programdata%\Activision" /s /q
-rmdir "%Documents%\Call Of Duty Modern Warfare" /s /q
-rmdir "%Documents%\Call Of Duty Black Ops Cold War" /s /q
-reg delete "HKCU\Software\Blizzard Entertainment\Battle.net" /f
-reg delete "HKEY_CURRENT_USER\Software\Blizzard Entertainment" /f
-reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
-reg delete "HKLM\Software\WOW6432Node\Blizzard Entertainment" /f
-reg delete "HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Identity" /f
-reg delete "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\InstallTime" /f
-taskkill /IM Agent.exe /F
-taskkill /IM Battle.net.exe /F
-del /f ".\Data\data\shmem"
-del /f ".\main\recipes\cmr_hist"
-del /f ".\Battle.net\Cache\index"
-del /f ".\Call of Duty Black Ops Cold War\telescopeCache\telescope_index.bat"
-del "D:\Program Files (x86)\Call of Duty Black Ops Cold War\telescopeCache\telescope_index.bat"
-del "D:\Program Files (x86)\Call of Duty Black Ops Cold War\Data\data\shmen"
-del "C:\Users\%username%\Documents\Call of Duty Black Ops Cold War\archive"
-del "C:\Users\%username%\Documents\Call of Duty Black Ops Cold War\players"
-del "C:\Users\%username%\Documents\Call of Duty Black Ops Cold War\report"
-del "C:\Users\%username%\Documents\Call of Duty Black Ops Cold War"
-del "C:\Users\%username%\AppData\Local\Battle.net\Account\802259981"
-del "C:\Users\%username%\AppData\Local\Battle.net\Account\802299369"
-del "C:\Users\%username%\AppData\Local\Battle.net\Account\803619482"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_0.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_1.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_2.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_3.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\f_000001.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\index.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\index"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_0"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_1"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_2"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\data_3"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\f_000001"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\GPUCache\index"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\index.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_0.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_1.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_2.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_3.dcache"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_0"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_1"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_2"
-del "C:\Users\%username%\AppData\Local\Battle.net\BrowserCache\Cache\data_3"
-del "C:\Users\%username%\AppData\Local\Battle.net\Cache"
-del "C:\Users\%username%\AppData\Local\Battle.net\Logs"
-del "C:\Users\%username%\AppData\Local\Battle.net\WidevineCdm"
-del "C:\Users\%username%\AppData\Local\Battle.net\CachedData"
-del "C:\Users\%username%\AppData\Local\Blizzard Entertainment"
-del "C:\Users\%username%\AppData\Roaming\Battle.net"
-del "C:\ProgramData\Battle.net"
-del "C:\ProgramData\Blizzard Entertainment"
-rundll32 user32.dll,MessageBeep
-cls
-echo Finished!
-timeout 4
+
+rem Kill any running instances of Agent.exe or Battle.net.exe
+taskkill /IM Agent.exe /F 2>nul
+taskkill /IM Battle.net.exe /F 2>nul
+
+rem Delete various files and directories
+del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data0.dcache" 2>nul
+del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data1.dcache" 2>nul
+del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc0.dcache" 2>nul
+del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc1.dcache" 2>nul
+del "D:\Program Files (x86)\Call of Duty Modern Warfare\Data\data\shmem" 2>nul
+del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\recipes\cmr_hist" 2>nul
+del /f ".\Data\data\shmem" 2>nul
+del /f ".\main\recipes\cmr_hist" 2>nul
+rmdir ".\main\recipes\cmr_hist" /s /q 2>nul
+rmdir "%userprofile%\documents\Call of Duty Modern Warfare" /s /q 2>nul
+rmdir "%localappdata%\Battle.net" /s /q 2>nul
+rmdir "%localappdata%\Blizzard Entertainment" /s /q 2>nul
+rmdir "%appdata%\Battle.net" /s /q 2>nul
+rmdir "%programdata%\Battle.net" /s /q 2>nul
+rmdir "%programdata%\Blizzard Entertainment" /s /q 2>nul
+rmdir "%programdata%\Activision" /s /q 2>nul
+rmdir "%Documents%\Call Of Duty Modern Warfare" /s /q 2>nul
+rmdir "%Documents%\Call Of Duty Black Ops Cold War" /s /q 2>nul
+
+rem Delete various registry keys
+reg delete "HKCU\Software\Blizzard Entertainment\Battle.net" /f 2>nul
+reg delete "HKEY_CURRENT_USER\Software\Blizzard Entertainment" /f 2>nul
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f 2>nul
+reg delete "HKLM\Software\WOW6432Node\Blizzard Entertainment" /f 2>nul
+reg delete "HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Identity" /f 2>nul
+reg delete "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\InstallTime" /f 2>nul
+
+rem Kill any running instances of Agent.exe or Battle.net.exe
+taskkill /IM Agent.exe /F 2>nul
+taskkill /IM
