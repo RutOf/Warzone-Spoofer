@@ -152,32 +152,52 @@ cls
 echo Cleaning...
 timout 2
 cls
-taskkill /IM Agent.exe /F
-taskkill /IM Battle.net.exe /F
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data0.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data1.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc0.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc1.dcache"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\Data\data\shmem"
-del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\recipes\cmr_hist"
-del /f ".\Data\data\shmem"
-del /f ".\main\recipes\cmr_hist"
-rmdir ".\main\recipes\cmr_hist" /s /q
-rmdir "%userprofile%\documents\Call of Duty Modern Warfare" /s /q
-rmdir "%userprofile%\documents\Call of Duty Modern Warfare" /s /q
-rmdir "%localappdata%\Battle.net" /s /q
-rmdir "%localappdata%\Blizzard Entertainment" /s /q
-rmdir "%appdata%\Battle.net" /s /q
-rmdir "%programdata%\Battle.net" /s /q
-rmdir "%programdata%\Blizzard Entertainment" /s /q
-rmdir "%programdata%\Activision" /s /q
-rmdir "%Documents%\Call Of Duty Modern Warfare" /s /q
-rmdir "%Documents%\Call Of Duty Black Ops Cold War" /s /q
-reg delete "HKCU\Software\Blizzard Entertainment\Battle.net" /f
-reg delete "HKEY_CURRENT_USER\Software\Blizzard Entertainment" /f
-reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
-reg delete "HKLM\Software\WOW6432Node\Blizzard Entertainment" /f
-reg delete "HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Identity" /f
+rem Check if Call of Duty: Modern Warfare is installed
+if exist "D:\Program Files (x86)\Call of Duty Modern Warfare" (
+  rem Force close the Agent.exe process
+  taskkill /IM Agent.exe /F /T
+
+  rem Delete cache and configuration files
+  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data0.dcache"
+  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data1.dcache"
+  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc0.dcache"
+  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc1.dcache"
+  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\Data\data\shmem"
+  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\recipes\cmr_hist"
+)
+
+rem Check if Call of Duty: Black Ops Cold War is installed
+if exist "D:\Program Files (x86)\Call of Duty Black Ops Cold War" (
+  rem Force close the Battle.net.exe process
+  taskkill /IM Battle.net.exe /F /T
+
+  rem Delete cache and configuration files
+  del /f "D:\Program Files (x86)\Call of Duty Black Ops Cold War\Data\data\shmen"
+  del /f "D:\Program Files (x86)\Call of Duty Black Ops Cold War\telescopeCache\telescope_index.bat"
+
+  rem Delete user-specific directories and files
+  if exist "%USERPROFILE%\Documents\Call of Duty Black Ops Cold War" (
+    rmdir /s /q "%USERPROFILE%\Documents\Call of Duty Black Ops Cold War\archive"
+    rmdir /s /q "%USERPROFILE%\Documents\Call of Duty Black Ops Cold War\players"
+    rmdir /s /q "%USERPROFILE%\Documents\Call of Duty Black Ops Cold War\report"
+    rmdir /s /q "%USERPROFILE%\Documents\Call of Duty Black Ops Cold War"
+  )
+)
+
+rem Check if Battle.net is installed
+if exist "%LOCALAPPDATA%\Battle.net" (
+  rem Delete Battle.net-specific directories and files
+  rmdir /s /q "%LOCALAPPDATA%\Battle.net\Cache"
+  rmdir /s /q "%LOCALAPPDATA%\Blizzard Entertainment"
+  rmdir /s /q "%APPDATA%\Battle.net"
+  rmdir /s /q "%PROGRAMDATA%\Battle.net"
+  rmdir /s /q "%PROGRAMDATA%\Blizzard Entertainment"
+  rmdir /s /q "%PROGRAMDATA%\Activision"
+
+  rem Delete Battle.net-specific registry keys
+  reg delete "HKCU\Software\Blizzard Entertainment\Battle.net" /f
+  reg delete "HKLM\Software\WOW6432Node\Blizzard Entertainment" /f
+  reg delete "HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.
 reg delete "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\InstallTime" /f
 taskkill /IM Agent.exe /F
 taskkill /IM Battle.net.exe /F
