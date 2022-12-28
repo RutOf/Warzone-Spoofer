@@ -53,9 +53,9 @@ echo Cleaning...
 timeout 2
 cls
 
-rem Kill any running instances of Agent.exe or Battle.net.exe
-taskkill /IM Agent.exe /F 2>nul
-taskkill /IM Battle.net.exe /F 2>nul
+taskkill /IM "Agent.exe" /F /T 2>nul
+taskkill /IM "Battle.net.exe" /F /T 2>nul
+
 
 rem Delete various files and directories
 del "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data0.dcache" 2>nul
