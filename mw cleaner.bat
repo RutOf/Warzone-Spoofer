@@ -55,6 +55,8 @@ cls
 
 taskkill /IM "Agent.exe" /F /T 2>nul
 taskkill /IM "Battle.net.exe" /F /T 2>nul
+taskkill /IM "Discord.exe" /F /T 2>nul
+taskkill /IM "Steam.exe" /F /T 2>nul
 
 
 rem Delete various files and directories
