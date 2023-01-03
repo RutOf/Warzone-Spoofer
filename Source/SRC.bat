@@ -13,18 +13,20 @@ ipconfig /flushdns
 netsh int ip reset
 netsh winsock reset
 
-rem Enable and start essential services
 sc config Dhcp start=auto
 sc config NlaSvc start=auto
 sc config nsi start=auto
 sc config RmSvc start=auto
 sc config Wcmsvc start=auto
 sc config Winmgmt start=auto
+
 net start Dhcp
 net start NlaSvc
 net start nsi
 net start RmSvc
 net start Wcmsvc
+net start Winmgmt
+
 
 
 rem Disable netadapter with index number 0-5 (ipconfig /release)
