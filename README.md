@@ -15,10 +15,10 @@
 ## Download: [Full Version](https://github.com/Fnoberz/COD-Spoofer/releases/tag/warfare)
 #### Discord server Help & Support: [Discord](https://discord.gg/MBTkVcJefp)
 
-## <a id="setup2"></a> 📞 〢 Support
-- If the free version does not work The last option is to pay. Read more below.
-- If you have any questions or don't understand the instructions, join Discord for help.
-- [Discord](https://discord.gg/MBTkVcJefp)
+## <a id="setup2"></a> 🗒 〢 Product
+- If the free version does not work You can pay to buy a personal project.
+- Safe  on main account without getting banned / no need to turn off virus scan Scroll down to the bottom to read more.
+- [Discord](https://discord.gg/MBTkVcJefp) 
 
 ---   
  
@@ -98,7 +98,7 @@ https://user-images.githubusercontent.com/94861415/203697769-ad4a1bf4-fd83-45ce-
  
 ## 💬 ・[Discord](https://discord.gg/MBTkVcJefp) 
 
- ### 🛒〢 `PRODUCT`
+ ### 🛒〢 `SHOP`
  
 <table>
 <tr>
@@ -125,5 +125,8 @@ A website that I created to introduce myself from start to finish. hope you like
 
 ---
 
-##  <p align="center"> Copyright © 2022
+  <br>
 
+<p align="center">
+  Copyright © 2021 - 2022
+<br>
