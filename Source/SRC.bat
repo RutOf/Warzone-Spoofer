@@ -12,7 +12,7 @@ ipconfig /renew
 ipconfig /flushdns
 netsh int ip reset
 netsh winsock reset
-
+ 
 sc config Dhcp start=auto
 sc config NlaSvc start=auto
 sc config nsi start=auto
