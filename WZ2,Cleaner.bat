@@ -12,11 +12,25 @@ IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
 )
 
 
-REM --> If error flag set, we do not have admin.
-if '%errorlevel%' NEQ '0' (
-echo Requesting administrative privileges...
-goto UACPrompt
-) else ( goto gotAdmin )
+
+rem Check if the script is running with administrative privileges
+net session >nul 2>&1
+if %errorlevel% == 0 (
+    rem Script is running with administrative privileges
+    goto gotAdmin
+) else (
+    rem Script is not running with administrative privileges
+    echo Requesting administrative privileges...
+    rem Attempt to elevate the script to administrator level
+    powershell -Command "Start-Process -FilePath '%~f0' -Verb runAs -ArgumentList '%*'"
+    rem Exit the script as it will now be running as administrator
+    exit /B
+)
+
+:gotAdmin
+rem Put commands that require administrator privileges here
+
+rem Rest of the script
 
 :UACPrompt
 echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
