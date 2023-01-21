@@ -29,13 +29,9 @@ net start Winmgmt
 
 
 
-rem Disable netadapter with index number 0-5 (ipconfig /release)
-wmic path win32_networkadapter where index=0 call disable
-wmic path win32_networkadapter where index=1 call disable
-wmic path win32_networkadapter where index=2 call disable
-wmic path win32_networkadapter where index=3 call disable
-wmic path win32_networkadapter where index=4 call disable
-wmic path win32_networkadapter where index=5 call disable
+for /L %i in (0,1,5) do (
+    wmic path win32_networkadapter where index=%i call disable
+)
 
 rem Timeout to let the network adapter recover
 timeout 6
@@ -159,14 +155,16 @@ if exist "D:\Program Files (x86)\Call of Duty Modern Warfare" (
   rem Force close the Agent.exe process
   taskkill /IM Agent.exe /F /T
 
-  rem Delete cache and configuration files
-  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data0.dcache"
-  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data1.dcache"
-  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc0.dcache"
-  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc1.dcache"
-  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\Data\data\shmem"
-  del /f "D:\Program Files (x86)\Call of Duty Modern Warfare\main\recipes\cmr_hist"
-)
+rem Delete cache and configuration files for Call of Duty: Modern Warfare
+del /f /q "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data0.dcache"
+del /f /q "D:\Program Files (x86)\Call of Duty Modern Warfare\main\data1.dcache"
+del /f /q "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc0.dcache"
+del /f /q "D:\Program Files (x86)\Call of Duty Modern Warfare\main\toc1.dcache"
+del /f /q "D:\Program Files (x86)\Call of Duty Modern Warfare\Data\data\shmem"
+del /f /q "D:\Program Files (x86)\Call of Duty Modern Warfare\main\recipes\cmr_hist"
+
+rem Confirm the files have been deleted
+echo Cache and configuration files have been deleted successfully.
 
 rem Check if Call of Duty: Black Ops Cold War is installed
 if exist "D:\Program Files (x86)\Call of Duty Black Ops Cold War" (
