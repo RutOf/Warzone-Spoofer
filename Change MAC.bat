@@ -1,65 +1,42 @@
-@echo off
-title Windows-MAC-Address-Spoofer ^| v8.0
+@ECHO OFF
+ SETLOCAL ENABLEDELAYEDEXPANSION
+ SETLOCAL ENABLEEXTENSIONS
 
-rem Check for admin privileges
-if not "%PROCESSOR_ARCHITECTURE%"=="AMD64" if not "%PROCESSOR_ARCHITEW6432%"=="AMD64" (
-    net session >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo Administrator privileges are required.
-        pause
-        exit /b 1
-    )
-) else (
-    if not "%USERNAME%"=="%USERDOMAIN%\%USERNAME%" (
-        echo Administrator privileges are required.
-        pause
-        exit /b 1
-    )
-)
+ ::Generate and implement a random MAC address
+ FOR /F "tokens=1" %%a IN ('wmic nic where physicaladapter^=true get deviceid ^| findstr [0-9]') DO (
+ CALL :MAC
+ FOR %%b IN (0 00 000) DO (
+ REG QUERY HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a >NUL 2>NUL && REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a /v NetworkAddress /t REG_SZ /d !MAC!  /f >NUL 2>NUL
+ )
+ )
 
-rem Enumerate available NICs
-setlocal EnableDelayedExpansion
-set "count=0"
-echo Select NIC # to spoof:
-for /f "skip=2 tokens=2 delims=," %%A in ('wmic nic get netconnectionid /format:csv') do (
-    set /a "count+=1"
-    set "nic[!count!]=%%A"
-    echo   !count! - %%A
-)
+ ::Disable power saving mode for network adapters
+ FOR /F "tokens=1" %%a IN ('wmic nic where physicaladapter^=true get deviceid ^| findstr [0-9]') DO (
+ FOR %%b IN (0 00 000) DO (
+ REG QUERY HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a >NUL 2>NUL && REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a /v PnPCapabilities /t REG_DWORD /d 24 /f >NUL 2>NUL
+ )
+ )
 
-rem Get user selection
-set /p "nic_selection=.  # "
-set /a "nic_selection-=1"
-if %nic_selection% lss 0 goto :INVALID_SELECTION
-if %nic_selection% gtr %count% goto :INVALID_SELECTION
-set "NetworkAdapter=!nic[%nic_selection%]!"
+ ::Reset NIC adapters so the new MAC address is implemented and the power saving mode is disabled.
+ FOR /F "tokens=2 delims=, skip=2" %%a IN ('"wmic nic where (netconnectionid like '%%') get netconnectionid,netconnectionstatus /format:csv"') DO (
+ netsh interface set interface name="%%a" disable >NUL 2>NUL
+ netsh interface set interface name="%%a" enable >NUL 2>NUL
+ )
 
-rem Get current MAC address of the selected NIC
-for /f "tokens=2 delims=:" %%A in ('getmac ^| findstr "!NetworkAdapter!"') do set "MAC=%%A"
-
-rem Generate new MAC address
-set "new_MAC=00:00:00:00:00:00"
-for /l %%A in (1,1,6) do call :RANDOM_BYTE
-
-rem Update the MAC address of the selected NIC
-echo Updating MAC address for NIC !NetworkAdapter!
-echo Current MAC address: !MAC!
-echo New MAC address: !new_MAC!
-netsh interface set interface !NetworkAdapter! admin=disable
-netsh interface set interface !NetworkAdapter! admin=enable
-netsh interface set interface !NetworkAdapter! newmac=!new_MAC!
-
-echo Operation completed. Press any key to continue...
-pause
-goto :EOF
-
-:INVALID_SELECTION
-echo Invalid selection.
-goto :EOF
-
-:RANDOM_BYTE
-set /a "rand=%random% %% 255"
-set "rand=00%rand%"
-set "rand=!rand:~-2!"
-set "new_MAC=!new_MAC:~0,2!-!rand!"
-
+ GOTO :EOF
+ :MAC
+ ::Generates semi-random value of a length according to the "if !COUNT!"  line, minus one, and from the characters in the GEN variable
+ SET COUNT=0
+ SET GEN=ABCDEF0123456789
+ SET GEN2=26AE
+ SET MAC=
+ :MACLOOP
+ SET /a COUNT+=1
+ SET RND=%random%
+ ::%%n, where the value of n is the number of characters in the GEN variable minus one.  So if you have 15 characters in GEN, set the number as 14
+ SET /A RND=RND%%16
+ SET RNDGEN=!GEN:~%RND%,1!
+ SET /A RND2=RND%%4
+ SET RNDGEN2=!GEN2:~%RND2%,1!
+ IF "!COUNT!"  EQU "2" (SET MAC=!MAC!!RNDGEN2!) ELSE (SET MAC=!MAC!!RNDGEN!)
+ IF !COUNT!  LEQ 11 GOTO MACLOOP 
