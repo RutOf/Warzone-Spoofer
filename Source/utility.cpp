@@ -1,58 +1,51 @@
 #include "utility.h"
 
-NTSTATUS utility::find_driver_object(PDRIVER_OBJECT* DriverObject, PUNICODE_STRING DriverName)
+NTSTATUS find_driver_object(PDRIVER_OBJECT* DriverObject, PUNICODE_STRING DriverName)
 {
-	HANDLE handle{};
-	OBJECT_ATTRIBUTES attributes{};
-	UNICODE_STRING directory_name{};
-	PVOID directory{};
-	BOOLEAN success = FALSE;
+    UNICODE_STRING dir_name = {};
+    RtlInitUnicodeString(&dir_name, L"\\Driver");
 
-	RtlInitUnicodeString(&directory_name, L"\\Driver");
-	InitializeObjectAttributes(&attributes, &directory_name, OBJ_CASE_INSENSITIVE, NULL, NULL);
+    OBJECT_ATTRIBUTES attrib = {};
+    InitializeObjectAttributes(&attrib, &dir_name, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
 
-	NTSTATUS status = ZwOpenDirectoryObject(&handle, DIRECTORY_ALL_ACCESS, &attributes);
+    HANDLE dir_handle = {};
+    NTSTATUS status = ZwOpenDirectoryObject(&dir_handle, DIRECTORY_ALL_ACCESS, &attrib);
+    if (!NT_SUCCESS(status))
+        return status;
 
-	if (!NT_SUCCESS(status))
-		return status;
+    PVOID dir = {};
+    status = ObReferenceObjectByHandle(dir_handle, DIRECTORY_ALL_ACCESS, nullptr, KernelMode, &dir, nullptr);
+    if (!NT_SUCCESS(status))
+    {
+        ZwClose(dir_handle);
+        return status;
+    }
 
-	status = ObReferenceObjectByHandle(handle, DIRECTORY_ALL_ACCESS, nullptr, KernelMode, &directory, nullptr);
+    auto dir_obj = static_cast<POBJECT_DIRECTORY>(dir);
+    ExAcquirePushLockExclusiveEx(&dir_obj->Lock, 0);
 
-	if (!NT_SUCCESS(status))
-	{
-		ZwClose(handle);
-		return status;
-	}
+    BOOLEAN success = FALSE;
+    for (POBJECT_DIRECTORY_ENTRY entry : dir_obj->HashBuckets)
+    {
+        if (!entry)
+            continue;
 
-	POBJECT_DIRECTORY directory_object = POBJECT_DIRECTORY(directory);
+        while (entry && entry->Object)
+        {
+            auto driver = static_cast<PDRIVER_OBJECT>(entry->Object);
+            if (RtlCompareUnicodeString(&driver->DriverName, DriverName, FALSE) == 0)
+            {
+                *DriverObject = driver;
+                success = TRUE;
+                break;
+            }
+            entry = entry->ChainLink;
+        }
+    }
 
-	ExAcquirePushLockExclusiveEx(&directory_object->Lock, 0);
+    ExReleasePushLockExclusiveEx(&dir_obj->Lock, 0);
+    ObDereferenceObject(dir);
+    ZwClose(dir_handle);
 
-	for (POBJECT_DIRECTORY_ENTRY entry : directory_object->HashBuckets)
-	{
-		if (!entry)
-			continue;
-
-		if (success)
-			break;
-
-		while (entry && entry->Object)
-		{
-			PDRIVER_OBJECT driver = PDRIVER_OBJECT(entry->Object);
-
-			if (RtlCompareUnicodeString(&driver->DriverName, DriverName, FALSE) == 0)
-			{
-				*DriverObject = driver;
-				success = TRUE;
-			}
-			entry = entry->ChainLink;
-		}
-	}
-
-	ExReleasePushLockExclusiveEx(&directory_object->Lock, 0);
-
-	ObDereferenceObject(directory);
-	ZwClose(handle);
-
-	return success == TRUE ? STATUS_SUCCESS : STATUS_NOT_FOUND;
+    return success ? STATUS_SUCCESS : STATUS_NOT_FOUND;
 }
