@@ -14,7 +14,7 @@
 
 ## Download: [Full Version](https://github.com/Fnoberz/COD-Spoofer/releases/tag/warfare)
 #### Discord server Help & Support: [Discord](https://discord.gg/MBTkVcJefp)
-
+ 
 ## <a id="setup2"></a> 🗒 〢 Product
 - If the free version does not work You can pay to buy a personal project.
 - Safe  on main account without getting banned / no need to turn off virus scan Scroll down to the bottom to read more.
