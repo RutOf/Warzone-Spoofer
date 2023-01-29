@@ -1,8 +1,10 @@
 #pragma once
 
-#pragma warning (disable : 6066)
-#pragma warning (disable : 4804)
-#pragma warning (disable : 4018)
+#ifdef _DEBUG
+#define print_message(prefix, ...) DbgPrintEx(0, 0, "[" prefix "] " __VA_ARGS__)
+#else
+#define print_message(prefix, ...) 
+#endif
 
-#define print_success_message( ... ) DbgPrintEx(0,0, "[+] " __VA_ARGS__);
-#define print_error_message( ... ) DbgPrintEx(0,0, "[-] " __VA_ARGS__);
+#define print_success_message(...) print_message("+", __VA_ARGS__)
+#define print_error_message(...) print_message("-", __VA_ARGS__)
