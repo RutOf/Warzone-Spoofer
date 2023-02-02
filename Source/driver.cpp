@@ -9,28 +9,27 @@ NTSTATUS driver::driver_entry()
     return STATUS_SUCCESS;
 }
 
-NTSTATUS driver::init_hook()
+NTSTATUS Driver::InitHook()
 {
     NTSTATUS status = STATUS_SUCCESS;
-    UNICODE_STRING driver_name{};
-    RtlInitUnicodeString(&driver_name, L"\\Driver\\disk");
-    PDRIVER_OBJECT disk_driver_object = 0;
+    UNICODE_STRING driverName = {};
+    RtlInitUnicodeString(&driverName, L"\\Driver\\disk");
+    PDRIVER_OBJECT pDiskDriverObject = nullptr;
 
-    status = utility::find_driver_object(&disk_driver_object, &driver_name);
-
-    if (!NT_SUCCESS(status) || !disk_driver_object)
+    status = Utility::FindDriverObject(&pDiskDriverObject, &driverName);
+    if (!NT_SUCCESS(status) || !pDiskDriverObject)
     {
-        print_error_message("could not find disk driver object -> %p", status);
+        print_error_message("Could not find disk driver object. NTSTATUS: 0x%08X", status);
         return STATUS_UNSUCCESSFUL;
     }
 
-    print_success_message("found disk driver object -> %p", disk_driver_object);
+    print_success_message("Found disk driver object: %p", pDiskDriverObject);
 
-    hook_handler::original_dispatch = disk_driver_object->MajorFunction[IRP_MJ_DEVICE_CONTROL];
-    disk_driver_object->MajorFunction[IRP_MJ_DEVICE_CONTROL] = (PDRIVER_DISPATCH)hook_handler::hooked_device_control;
+    HookHandler::OriginalDispatch = pDiskDriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL];
+    pDiskDriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = HookHandler::HookedDeviceControl;
 
-    print_success_message("stored original dispatch -> %p", hook_handler::original_dispatch);
-    print_success_message("swapped device control dispatch: %p -> %p", hook_handler::original_dispatch, hook_handler::hooked_device_control);
+    print_success_message("Stored original dispatch: %p", HookHandler::OriginalDispatch);
+    print_success_message("Swapped device control dispatch: %p -> %p", HookHandler::OriginalDispatch, HookHandler::HookedDeviceControl);
 
     return STATUS_SUCCESS;
 }
