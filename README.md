@@ -90,7 +90,7 @@ https://user-images.githubusercontent.com/94861415/203697769-ad4a1bf4-fd83-45ce-
 
 --- 
  
-## 💬 ・[Telegram](https://t.me/Slackes) 
+## 💬 ・[Discord](https://discord.com/users/1031767513077387284) | ADD FRIEND FOR BUY 
 
  ### 🛒〢 `SHOP`
  
