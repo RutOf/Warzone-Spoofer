@@ -2,21 +2,22 @@
 
 PDRIVER_DISPATCH hook_handler::original_dispatch = nullptr;
 
-NTSTATUS disk_completion_routine(PDEVICE_OBJECT pDeviceObject, PIRP Irp, PIO_COMPLETION_STRUCT context)
+NTSTATUS DiskCompletionRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_COMPLETION_CONTEXT Context)
 {
-	UNREFERENCED_PARAMETER(Irp);
-	UNREFERENCED_PARAMETER(pDeviceObject);
+    UNREFERENCED_PARAMETER(Irp);
+    UNREFERENCED_PARAMETER(DeviceObject);
 
-	if (context->requestBuffer->SerialNumberOffset > 0 && context->requestBuffer->SerialNumberOffset < context->OutBufferLength)
-	{
-		char* current_serial_number = ((char*)context->requestBuffer) + context->requestBuffer->SerialNumberOffset;
-		char spoofed_serial[14] = "zpes-was-here"; // F4J48B74B-PQ75HU6I5
+    if (Context->RequestBuffer->SerialNumberOffset > 0 && Context->RequestBuffer->SerialNumberOffset < Context->OutBufferLength)
+    {
+        char* CurrentSerialNumber = ((char*)Context->RequestBuffer) + Context->RequestBuffer->SerialNumberOffset;
+        char SpoofedSerial[] = "zpes-was-here";
 
-		memcpy(current_serial_number, spoofed_serial, sizeof(spoofed_serial));
-	}
+        memcpy(CurrentSerialNumber, SpoofedSerial, sizeof(SpoofedSerial));
+    }
 
-	return STATUS_SUCCESS;
+    return STATUS_SUCCESS;
 }
+
 
 NTSTATUS hook_handler::hooked_device_control(PDEVICE_OBJECT pDeviceObject, PIRP Irp)
 {
