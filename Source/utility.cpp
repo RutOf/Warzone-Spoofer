@@ -1,25 +1,40 @@
 #include "utility.h"
 
-NTSTATUS find_driver_object(PDRIVER_OBJECT* DriverObject, PUNICODE_STRING DriverName)
+OBJECT_ATTRIBUTES objAttribs = {};
+InitializeObjectAttributes(&objAttribs, &dirName, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
+
+HANDLE dirHandle = {};
+NTSTATUS status = ZwOpenDirectoryObject(&dirHandle, DIRECTORY_ALL_ACCESS, &objAttribs);
+if (!NT_SUCCESS(status))
 {
-    UNICODE_STRING dir_name = {};
-    RtlInitUnicodeString(&dir_name, L"\\Driver");
+    return status;
+}
 
-    OBJECT_ATTRIBUTES attrib = {};
-    InitializeObjectAttributes(&attrib, &dir_name, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
+PVOID dir = {};
+status = ObReferenceObjectByHandle(dirHandle, DIRECTORY_ALL_ACCESS, nullptr, KernelMode, &dir, nullptr);
+if (!NT_SUCCESS(status))
+{
+    ZwClose(dirHandle);
+    return status;
+}
 
-    HANDLE dir_handle = {};
-    NTSTATUS status = ZwOpenDirectoryObject(&dir_handle, DIRECTORY_ALL_ACCESS, &attrib);
-    if (!NT_SUCCESS(status))
-        return status;
+UNICODE_STRING objectName = {};
+RtlInitUnicodeString(&objectName, DriverName->Buffer);
 
-    PVOID dir = {};
-    status = ObReferenceObjectByHandle(dir_handle, DIRECTORY_ALL_ACCESS, nullptr, KernelMode, &dir, nullptr);
-    if (!NT_SUCCESS(status))
-    {
-        ZwClose(dir_handle);
-        return status;
-    }
+PVOID driverObject = nullptr;
+status = ObOpenObjectByName(&objAttribs, dir, &objectName, 0, nullptr, KernelMode, &driverObject);
+if (!NT_SUCCESS(status))
+{
+    ObDereferenceObject(dir);
+    ZwClose(dirHandle);
+    return status;
+}
+
+*DriverObject = (PDRIVER_OBJECT)driverObject;
+ObDereferenceObject(dir);
+ZwClose(dirHandle);
+return status;
+}
 
     auto dir_obj = static_cast<POBJECT_DIRECTORY>(dir);
     ExAcquirePushLockExclusiveEx(&dir_obj->Lock, 0);
