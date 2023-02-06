@@ -1,22 +1,29 @@
 #include "utility.h"
 
 OBJECT_ATTRIBUTES objAttribs = {};
-InitializeObjectAttributes(&objAttribs, &dirName, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
-
-HANDLE dirHandle = {};
-NTSTATUS status = ZwOpenDirectoryObject(&dirHandle, DIRECTORY_ALL_ACCESS, &objAttribs);
+NTSTATUS status = InitializeObjectAttributes(&objAttribs, &dirName, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
 if (!NT_SUCCESS(status))
 {
     return status;
 }
 
-PVOID dir = {};
+HANDLE dirHandle = {};
+status = ZwOpenDirectoryObject(&dirHandle, DIRECTORY_ALL_ACCESS, &objAttribs);
+if (!NT_SUCCESS(status))
+{
+    return status;
+}
+
+PVOID dir = nullptr;
 status = ObReferenceObjectByHandle(dirHandle, DIRECTORY_ALL_ACCESS, nullptr, KernelMode, &dir, nullptr);
 if (!NT_SUCCESS(status))
 {
     ZwClose(dirHandle);
     return status;
 }
+
+ZwClose(dirHandle);
+
 
 UNICODE_STRING objectName = {};
 RtlInitUnicodeString(&objectName, DriverName->Buffer);
