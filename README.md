@@ -1,6 +1,21 @@
-## Spoofer Call of Duty Warfare | Warzone 
+<h1 align="center">
+  Warzone Spoofer ⚙
+</h1>
 
---- 
+<p align="center">
+  Remove Shadow Banned & Trace file 
+</p>
+
+
+ 
+<p align="center">
+  <img src="https://img.shields.io/github/languages/top/Serups/Warzone-Spoofer?style=flat-square"/>
+  <img src="https://img.shields.io/github/last-commit/Serups/Warzone-Spoofer?style=flat-square"/>
+  <img src="https://img.shields.io/github/stars/Serups/Warzone-Spoofer?color=5ac18e&label=Stars&style=flat-square"/>
+
+</p>
+
+---
     
 ### 📜・Read 
  
@@ -89,10 +104,16 @@ https://user-images.githubusercontent.com/94861415/203697769-ad4a1bf4-fd83-45ce-
 
 
 --- 
- 
-## 💬 ・[Discord](https://discord.gg/2euDQqzD8Y)
 
- ### 🛒〢 `SHOP`
+  <p align="center">
+    <a href="https://discord.gg/2euDQqzD8Y">
+        <img title="Serups server discord" alt="Serups discord" src="https://discordapp.com/api/guilds/923947526552432731/widget.png?style=banner2"/>
+    </a>
+</p> 
+ 
+## 💬 ・[Discord Server](https://discord.gg/2euDQqzD8Y) 
+
+ ### 🛒〢 `PRODUCT`
  
 <table>
 <tr>
@@ -109,20 +130,18 @@ https://user-images.githubusercontent.com/94861415/203697769-ad4a1bf4-fd83-45ce-
 - Undetected
 - Custom Feature if you want `(Example: Aimbot + Esp + Skin Changers)`
 
-### 📌〢 Warranty
+### 🔱〢 Warranty
 
 - Support 24 Hr
 - Update Free
 - If banned = `REFUND`
 
-A website that I created to introduce myself from start to finish. hope you like it [Slackes.me](http://Serups.me/)
+A website that I created to introduce myself from start to finish. hope you like it [Serups.me](http://Serups.me/)
 
 ---
-
 
   <br>
 
 <p align="center">
   Copyright © 2021 - 2022
 <br>
-
