@@ -19,36 +19,64 @@ NTSTATUS DiskCompletionRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_COMPLE
 }
 
 
+// Define the structure to be used for the spoofed context
+typedef struct _IO_COMPLETION_STRUCT {
+    PIO_COMPLETION_ROUTINE oldCompletionRoutine; // the original completion routine
+    PVOID oldContext; // the original context
+    ULONG signature; // a signature to validate the context
+    PSTORAGE_DEVICE_DESCRIPTOR requestBuffer; // pointer to the request buffer
+    ULONG OutBufferLength; // output buffer length
+} IO_COMPLETION_STRUCT, *PIO_COMPLETION_STRUCT;
+
+// Define the hooked device control function
 NTSTATUS hook_handler::hooked_device_control(PDEVICE_OBJECT pDeviceObject, PIRP Irp)
 {
-	PIO_STACK_LOCATION stack = IoGetCurrentIrpStackLocation(Irp);
-	switch (stack->Parameters.DeviceIoControl.IoControlCode)
-	{
-	case IOCTL_STORAGE_QUERY_PROPERTY:
-	{
-		PSTORAGE_PROPERTY_QUERY request_buffer = (PSTORAGE_PROPERTY_QUERY)Irp->AssociatedIrp.SystemBuffer;
+    // Get the current I/O stack location
+    PIO_STACK_LOCATION stack = IoGetCurrentIrpStackLocation(Irp);
 
-		if (!request_buffer->PropertyId == StorageDeviceProperty)
-			return hook_handler::original_dispatch(pDeviceObject, Irp);
+    // If the control code is not IOCTL_STORAGE_QUERY_PROPERTY, return control to the original driver function
+    if (stack->Parameters.DeviceIoControl.IoControlCode != IOCTL_STORAGE_QUERY_PROPERTY)
+    {
+        return hook_handler::original_dispatch(pDeviceObject, Irp);
+    }
 
-		stack->Control = 0;
-		stack->Control |= SL_INVOKE_ON_SUCCESS;
+    // Get the storage property query request buffer
+    PSTORAGE_PROPERTY_QUERY requestBuffer = (PSTORAGE_PROPERTY_QUERY)Irp->AssociatedIrp.SystemBuffer;
 
-		PVOID original_context = stack->Context;
+    // If the property ID is not StorageDeviceProperty, return control to the original driver function
+    if (requestBuffer->PropertyId != StorageDeviceProperty)
+    {
+        return hook_handler::original_dispatch(pDeviceObject, Irp);
+    }
 
-		stack->Context = (PVOID)ExAllocatePool(NonPagedPool, sizeof(IO_COMPLETION_STRUCT));
+    // Allocate memory for the spoofed context
+    PIO_COMPLETION_STRUCT spoofed_context = (PIO_COMPLETION_STRUCT)ExAllocatePoolWithTag(NonPagedPool, sizeof(IO_COMPLETION_STRUCT), 'hook');
 
-		PIO_COMPLETION_STRUCT spoofed_context = (PIO_COMPLETION_STRUCT)stack->Context;
-		spoofed_context->oldCompletionRoutine = stack->CompletionRoutine;
-		spoofed_context->oldContext = original_context;
-		spoofed_context->signature = 0x75820834;
-		spoofed_context->requestBuffer = (PSTORAGE_DEVICE_DESCRIPTOR)request_buffer;
-		spoofed_context->OutBufferLength = stack->Parameters.DeviceIoControl.OutputBufferLength;
+    if (spoofed_context == NULL)
+    {
+        // If memory allocation fails, return an error code
+        Irp->IoStatus.Status = STATUS_INSUFFICIENT_RESOURCES;
+        IoCompleteRequest(Irp, IO_NO_INCREMENT);
+        return STATUS_INSUFFICIENT_RESOURCES;
+    }
 
-		stack->CompletionRoutine = (PIO_COMPLETION_ROUTINE)disk_completion_routine;
-	}
+    // Fill in the spoofed context structure
+    spoofed_context->oldCompletionRoutine = stack->CompletionRoutine;
+    spoofed_context->oldContext = stack->Context;
+    spoofed_context->signature = 0x75820834;
+    spoofed_context->requestBuffer = (PSTORAGE_DEVICE_DESCRIPTOR)requestBuffer;
+    spoofed_context->OutBufferLength = stack->Parameters.DeviceIoControl.OutputBufferLength;
 
-	default:
-		return hook_handler::original_dispatch(pDeviceObject, Irp);
-	}
+    // Modify the IRP completion routine
+    stack->CompletionRoutine = disk_completion_routine;
+
+    // Set the IRP context to point to the spoofed context
+    stack->Context = spoofed_context;
+
+    // Set the IRP control flags to invoke the completion routine only on success
+    stack->Control |= SL_INVOKE_ON_SUCCESS;
+
+    // Pass the IRP on to the original driver function
+    return hook_handler::original_dispatch(pDeviceObject, Irp);
 }
+
