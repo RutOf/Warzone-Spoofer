@@ -1,8 +1,15 @@
-@echo off
-title Tuga's COD Tracer Cleaner
 
-:: Slackes
-:-------------------------------------
+@echo off
+title Origin/Apex/EAC Cleaner
+color C
+@ ECHO.
+@ ECHO.  #####                                     
+@ ECHO. #     # ###### #####  #    # #####   ####  
+@ ECHO. #       #      #    # #    # #    # #      
+@ ECHO.  #####  #####  #    # #    # #    #  ####  
+@ ECHO.       # #      #####  #    # #####       # 
+@ ECHO. #     # #      #   #  #    # #      #    # 
+@ ECHO.  #####  ###### #    #  ####  #       #### 
 
 REM --> Check for permissions
 IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
