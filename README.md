@@ -111,10 +111,10 @@ https://user-images.githubusercontent.com/94861415/203697769-ad4a1bf4-fd83-45ce-
     </a>
 </p> 
  
-## 💬 ・[Discord Server](https://discord.gg/2euDQqzD8Y) 
+## 💬 ・[Discord](https://discord.gg/2euDQqzD8Y) | MAIN SERVER
 `CLICK BLUE BUTTON FOR JOIN SERVER.`
 
- ### 🛒〢 `PRODUCT`
+ ### 🛒〢 `SHOP`
  
 <table>
 <tr>
