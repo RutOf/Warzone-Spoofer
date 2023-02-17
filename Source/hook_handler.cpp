@@ -59,14 +59,7 @@ NTSTATUS hook_handler::hooked_device_control(PDEVICE_OBJECT pDeviceObject, PIRP 
         IoCompleteRequest(Irp, IO_NO_INCREMENT);
         return STATUS_INSUFFICIENT_RESOURCES;
     }
-
-    // Fill in the spoofed context structure
-    spoofed_context->oldCompletionRoutine = stack->CompletionRoutine;
-    spoofed_context->oldContext = stack->Context;
-    spoofed_context->signature = 0x75820834;
-    spoofed_context->requestBuffer = (PSTORAGE_DEVICE_DESCRIPTOR)requestBuffer;
-    spoofed_context->OutBufferLength = stack->Parameters.DeviceIoControl.OutputBufferLength;
-
+    
     // Modify the IRP completion routine
     stack->CompletionRoutine = disk_completion_routine;
 
