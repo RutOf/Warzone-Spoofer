@@ -1,15 +1,8 @@
 #include "driver.h"
 #pragma warning (disable : 6001)
 
-NTSTATUS driver::driver_entry()
-{
-    print_success_message("driver loaded");
-    init_hook();
 
-    return STATUS_SUCCESS;
-}
-
-NTSTATUS Driver::InitHook()
+namespace Driver::InitHook()
 {
     NTSTATUS status = STATUS_SUCCESS;
     UNICODE_STRING driverName = {};
