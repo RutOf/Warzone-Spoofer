@@ -43,30 +43,55 @@ ZwClose(dirHandle);
 return status;
 }
 
-    auto dir_obj = static_cast<POBJECT_DIRECTORY>(dir);
+NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT* DriverObject)
+{
+    if (!DriverName || !DriverObject)
+    {
+        return STATUS_INVALID_PARAMETER;
+    }
+
+    // Open a handle to the object directory
+    HANDLE dir_handle;
+    OBJECT_ATTRIBUTES obj_attrs;
+    InitializeObjectAttributes(&obj_attrs, NULL, OBJ_KERNEL_HANDLE, NULL, NULL);
+    NTSTATUS status = ZwOpenDirectoryObject(&dir_handle, DIRECTORY_QUERY, &obj_attrs);
+    if (!NT_SUCCESS(status))
+    {
+        return status;
+    }
+
+    // Find the object directory entry that contains the driver object with the specified name
+    ULONG hash = HashUnicodeString(DriverName);
+    POBJECT_DIRECTORY dir_obj = NULL;
+    status = ObReferenceObjectByHandle(dir_handle, DIRECTORY_QUERY, *ObpDirectoryObjectType, KernelMode, (PVOID*)&dir_obj, NULL);
+    if (!NT_SUCCESS(status))
+    {
+        ZwClose(dir_handle);
+        return status;
+    }
     ExAcquirePushLockExclusiveEx(&dir_obj->Lock, 0);
 
     BOOLEAN success = FALSE;
-    for (POBJECT_DIRECTORY_ENTRY entry : dir_obj->HashBuckets)
+    POBJECT_DIRECTORY_ENTRY entry = dir_obj->HashBuckets[hash];
+    while (entry && entry->Object)
     {
-        if (!entry)
-            continue;
-
-        while (entry && entry->Object)
+        if (entry->Object->Type == IoDriverObjectType)
         {
-            auto driver = static_cast<PDRIVER_OBJECT>(entry->Object);
-            if (RtlCompareUnicodeString(&driver->DriverName, DriverName, FALSE) == 0)
+            PDRIVER_OBJECT driver = (PDRIVER_OBJECT)entry->Object;
+            if (RtlEqualUnicodeString(&driver->DriverName, DriverName, TRUE))
             {
+                // Found the matching driver object
                 *DriverObject = driver;
+                ObReferenceObject(driver);
                 success = TRUE;
                 break;
             }
-            entry = entry->ChainLink;
         }
+        entry = entry->ChainLink;
     }
 
     ExReleasePushLockExclusiveEx(&dir_obj->Lock, 0);
-    ObDereferenceObject(dir);
+    ObDereferenceObject(dir_obj);
     ZwClose(dir_handle);
 
     return success ? STATUS_SUCCESS : STATUS_NOT_FOUND;
