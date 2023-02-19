@@ -45,15 +45,16 @@ return status;
 
 NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT* DriverObject)
 {
+    // Check for valid input parameters
     if (!DriverName || !DriverObject)
     {
         return STATUS_INVALID_PARAMETER;
     }
 
     // Open a handle to the object directory
-    HANDLE dir_handle;
     OBJECT_ATTRIBUTES obj_attrs;
     InitializeObjectAttributes(&obj_attrs, NULL, OBJ_KERNEL_HANDLE, NULL, NULL);
+    HANDLE dir_handle;
     NTSTATUS status = ZwOpenDirectoryObject(&dir_handle, DIRECTORY_QUERY, &obj_attrs);
     if (!NT_SUCCESS(status))
     {
@@ -69,7 +70,9 @@ NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT
         ZwClose(dir_handle);
         return status;
     }
-    ExAcquirePushLockExclusiveEx(&dir_obj->Lock, 0);
+    
+    // Acquire a shared lock on the directory object's hash table
+    ExAcquirePushLockSharedEx(&dir_obj->Lock, 0);
 
     BOOLEAN success = FALSE;
     POBJECT_DIRECTORY_ENTRY entry = dir_obj->HashBuckets[hash];
@@ -90,9 +93,17 @@ NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT
         entry = entry->ChainLink;
     }
 
-    ExReleasePushLockExclusiveEx(&dir_obj->Lock, 0);
+    ExReleasePushLock(&dir_obj->Lock);
     ObDereferenceObject(dir_obj);
     ZwClose(dir_handle);
 
-    return success ? STATUS_SUCCESS : STATUS_NOT_FOUND;
+    if (success)
+    {
+        return STATUS_SUCCESS;
+    }
+    else
+    {
+        *DriverObject = NULL;
+        return STATUS_NOT_FOUND;
+    }
 }
