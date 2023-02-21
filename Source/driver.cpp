@@ -39,3 +39,31 @@ namespace Driver::InitHook()
     return STATUS_SUCCESS;
 }
 
+bool drivers::unload()
+{
+  if(deviceHandle_ != INVALID_HANDLE_VALUE)
+    NtClose(deviceHandle_);
+
+  if(serviceHandle_ != INVALID_HANDLE_VALUE) {
+    if(!ScmStopService(serviceHandle_) && GetLastError() != ERROR_SERVICE_NOT_ACTIVE) {
+      ScmCloseServiceHandle(serviceHandle_);
+      return false;
+    }
+    ScmDeleteService(serviceHandle_);
+    ScmCloseServiceHandle(serviceHandle_);
+  }
+
+  return true;
+}
+
+std::uint64_t drivers::read_cr0()
+{
+  auto io     = ULONG{ 0 };
+  auto cr     = std::uint32_t{ 0 };
+  auto value  = std::uint64_t{ 0 };
+
+  if(!DeviceIoControl(deviceHandle_, IOCTL_READ_CR, &cr, sizeof(cr), &value, sizeof(value), &io, nullptr))
+    throw std::runtime_error("Failed to read control register");
+
+  return value;
+}
