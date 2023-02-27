@@ -22,7 +22,7 @@ namespace Driver::InitHook()
     if (!pDiskDriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL])
     {
         // If the dispatch function is not valid, log an error and return an unsuccessful status
-        print_error_message("Original dispatch function is not valid.");
+        print_error_message("Not Activated");
         return STATUS_UNSUCCESSFUL;
     }
 
