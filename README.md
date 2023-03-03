@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/github/last-commit/Serups/Warzone-Spoofer?style=flat-square"/>
   <img src="https://img.shields.io/github/stars/Serups/Warzone-Spoofer?color=5ac18e&label=Stars&style=flat-square"/>
 
-</p>
+</p> 
 
 ---
     
