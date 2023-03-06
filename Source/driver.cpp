@@ -56,14 +56,25 @@ bool drivers::unload()
   return true;
 }
 
+// Read the value of control register CR0
+// Returns the value of the control register
 std::uint64_t drivers::read_cr0()
 {
-  auto io     = ULONG{ 0 };
-  auto cr     = std::uint32_t{ 0 };
-  auto value  = std::uint64_t{ 0 };
+  // Initialize variables with descriptive names
+  ULONG bytesReturned = 0;
+  std::uint32_t controlRegisterValue = 0;
+  std::uint64_t resultValue = 0;
 
-  if(!DeviceIoControl(deviceHandle_, IOCTL_READ_CR, &cr, sizeof(cr), &value, sizeof(value), &io, nullptr))
-    throw std::runtime_error("Failed to read control register");
+  // Use the DeviceIoControl function to read the control register value
+  BOOL success = DeviceIoControl(deviceHandle_, IOCTL_READ_CR, &controlRegisterValue, sizeof(controlRegisterValue), &resultValue, sizeof(resultValue), &bytesReturned, nullptr);
+  if (!success)
+  {
+    // Handle errors appropriately
+    DWORD lastError = GetLastError();
+    throw std::runtime_error("Failed to read control register: " + std::to_string(lastError));
+  }
 
-  return value;
+  // Return the value of the control register
+  return resultValue;
 }
+
