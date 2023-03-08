@@ -18,8 +18,6 @@ NTSTATUS DiskCompletionRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp, PIO_COMPLE
     return STATUS_SUCCESS;
 }
 
-
-// Define the structure to be used for the spoofed context
 typedef struct _IO_COMPLETION_STRUCT {
     PIO_COMPLETION_ROUTINE oldCompletionRoutine; // the original completion routine
     PVOID oldContext; // the original context
