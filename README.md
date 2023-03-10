@@ -22,15 +22,15 @@
 - When you register a new account to play You will get banned after playing 1-3 games because you get Shadow Bans or HWID ban
 - All these steps will help you get back to playing it, please read all steps before asking.
 - Read step all 
-- All archives and text are from the original UC, so it's not mine.
+- **Scroll Down for Raed more**
 
- Sort the steps of use Ifthere is no number written in front
----    
 
-## Download: [Full Version](https://github.com/Serups/COD-Spoofer/releases/tag/warfare)
-#### Discord server Help & Support: [Discord](https://discord.gg/2euDQqzD8Y)
+#### ❗ Help & Support
+- Not understand How To Use | Join Discord For Helps: [Discord Servers](https://discord.gg/2euDQqzD8Y)
+
+---
  
-## <a id="setup2"></a> 🗒 〢 Undetected
+### <a id="setup2"></a> 🗒 〢 Undetected
 - Free version is used by many Users, Detected are quite High | Our recommended alternative is Private Cheat.
 - **Legit Playing & Waranty & Lifetime | Up To You.**
 - [Discord Server](https://discord.gg/2euDQqzD8Y) 
@@ -39,6 +39,9 @@
  
 
 ## 🤓・ How To Use 
+
+## Download: [Full Version](https://github.com/Serups/COD-Spoofer/releases/tag/warfare)
+
 #### 1. First , you have to check your current hwid to compare it with the new ones:
 
 - Open HWID Checker.bat
