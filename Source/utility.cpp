@@ -102,6 +102,7 @@ Cleanup:
 }
 
 
+// Find a driver object by name in the Windows kernel's object directory
 NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT* DriverObject)
 {
     // Check for valid input parameters
@@ -111,9 +112,8 @@ NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT
     }
 
     // Open a handle to the object directory
-    OBJECT_ATTRIBUTES obj_attrs;
-    InitializeObjectAttributes(&obj_attrs, NULL, OBJ_KERNEL_HANDLE, NULL, NULL);
     HANDLE dir_handle;
+    OBJECT_ATTRIBUTES obj_attrs = RTL_CONSTANT_OBJECT_ATTRIBUTES(&g_DosDevicesDirectory, OBJ_KERNEL_HANDLE | OBJ_CASE_INSENSITIVE);
     NTSTATUS status = ZwOpenDirectoryObject(&dir_handle, DIRECTORY_QUERY, &obj_attrs);
     if (!NT_SUCCESS(status))
     {
@@ -129,15 +129,16 @@ NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT
         ZwClose(dir_handle);
         return status;
     }
-    
+
     // Acquire a shared lock on the directory object's hash table
     ExAcquirePushLockSharedEx(&dir_obj->Lock, 0);
 
+    // Search for the driver object by name
     BOOLEAN success = FALSE;
     POBJECT_DIRECTORY_ENTRY entry = dir_obj->HashBuckets[hash];
     while (entry && entry->Object)
     {
-        if (entry->Object->Type == IoDriverObjectType)
+        if (entry->Object->Type == IO_TYPE_DRIVER)
         {
             PDRIVER_OBJECT driver = (PDRIVER_OBJECT)entry->Object;
             if (RtlEqualUnicodeString(&driver->DriverName, DriverName, TRUE))
@@ -152,10 +153,14 @@ NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT
         entry = entry->ChainLink;
     }
 
+    // Release the lock on the directory object's hash table
     ExReleasePushLock(&dir_obj->Lock);
+
+    // Dereference the object directory and close the handle
     ObDereferenceObject(dir_obj);
     ZwClose(dir_handle);
 
+    // Return the appropriate status code
     if (success)
     {
         return STATUS_SUCCESS;
@@ -166,3 +171,4 @@ NTSTATUS FindDriverObjectByName(const UNICODE_STRING* DriverName, PDRIVER_OBJECT
         return STATUS_NOT_FOUND;
     }
 }
+
