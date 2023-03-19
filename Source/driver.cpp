@@ -56,29 +56,19 @@ bool drivers::unload()
   return true;
 }
 
-
-/**
- * Reads the value of the CR0 control register in the processor.
- *
- * @return The value of the CR0 register.
- *
- * @throws std::runtime_error if the read operation fails or returns an unexpected number of bytes.
- */
 std::uint64_t drivers::read_cr0()
 {
   // Ensure that the size of std::uint64_t is equal to the size of the output buffer.
-  static_assert(sizeof(std::uint64_t) == sizeof(resultValue), "Output buffer size mismatch.");
+  static_assert(sizeof(std::uint64_t) == sizeof(std::uint64_t), "Output buffer size mismatch.");
 
   std::uint64_t resultValue = 0;
   DWORD bytesReturned = 0;
   std::error_code ec;
 
-  BOOL success = DeviceIoControl(deviceHandle_, IOCTL_READ_CR, nullptr, 0, &resultValue, sizeof(resultValue), &bytesReturned, nullptr);
-  
-  if (!success)
+  if (!DeviceIoControl(deviceHandle_, IOCTL_READ_CR, nullptr, 0, &resultValue, sizeof(resultValue), &bytesReturned, nullptr))
   {
     ec = std::error_code(GetLastError(), std::system_category());
-    throw std::runtime_error("Failed to read CR0 register: " + ec.message());
+    throw std::system_error(ec, "Failed to read CR0 register");
   }
 
   if (bytesReturned != sizeof(resultValue))
@@ -88,5 +78,3 @@ std::uint64_t drivers::read_cr0()
 
   return resultValue;
 }
-
-
