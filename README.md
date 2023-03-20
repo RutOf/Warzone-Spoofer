@@ -99,7 +99,7 @@ cd [path to "HWID spoof" folder]
 
 - Press win + r and type in "regedit" and press enter
 - Follow the path: "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography"
-- Open this website
+- Open this website " https://guidgenerator.com/ "
 - Generate a new GUID
 - Copy and paste the new GUID into the "MachineGuid" key.
 - Do the same thing with this path: "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001"
