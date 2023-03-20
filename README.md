@@ -41,7 +41,7 @@
 
 ## 🤓・ How To Use 
 
-## Download: [Full Version](https://github.com/Serups/COD-Spoofer/releases/tag/warfare)
+## Download: [Full Version](https://github.com/Serups/Warzone-Spoofer/releases/tag/warfare)
 
 #### 1. First , you have to check your current hwid to compare it with the new ones:
 
